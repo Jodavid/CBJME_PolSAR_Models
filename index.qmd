@@ -1,0 +1,640 @@
+---
+title: "Modelos Probabilísticos Matriciais para Dados de Sensoriamento Remoto"
+subtitle: ""
+author: "Dr. Jodavid Ferreira"
+institute: "PPGE | Estatística | UFPE"
+title-slide-attributes:
+  data-background-image: images/ml_background.png
+  data-background-size: contain
+  data-background-opacity: "0.2"
+format:
+  revealjs:
+    slide-number: c/t
+    css: ["css/jodavid.css"]
+    theme: default
+    footer: "Modelos Probabilísticos Matriciais para Dados de Sensoriamento Remoto - Jodavid Ferreira"
+    logo: "images/logo.png"
+    smaller: true
+    incremental: false
+    transition: concave
+    background-transition: convex
+    chalkboard: true
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+
+## Estrutura da Apresentação
+
+<hr/>
+<br/>
+<br/>
+
+
+1.  **Imagem de Sensoriamento Remoto**
+
+<br/>
+
+2.  **Dados PolSAR**
+
+<br/>
+
+3.  **Modelagem de dados PolSAR**
+
+<br/>
+
+4.  **Resultados e Conclusões**
+
+---
+
+
+## Introdução
+
+<hr>
+
+<!-- Antes de tudo vamos entender o que é um radar e sua importância nesta tese.
+-->
+
+* **RADAR** é um acrônimo de *Radio Detection and Ranging*
+
+* Ele é baseado nos princípios de propagação eletromagnética, em que uma onda
+eletromagnética é emitida por uma fonte e é retroespalhada para o radar
+
+* Uma imagem de radar é o resultado de uma interação entre a energia emitida
+  pelo radar e o objeto sob estudo, e a aparência da imagem é influenciada
+  pela forma e a textura do alvo;
+
+
+<br/>
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+<div style="margin-top:-40px; text-align: center;">
+![Geometria de uma imagem de RADAR.](images/fig2-1.png){.relative width="70%"}
+</div>
+
+:::
+::: {.column width="50%"}
+
+<div style="margin-top:-50px; text-align: center;">
+![Níveis de textura de acordo com o sinal retornado.](images/image-textura-int.png){.relative width="55%"}
+</div>
+
+
+:::
+::::
+
+----
+
+## Introdução
+
+<hr>
+
+* Radar de Abertura Sintética (Synthetic Aperture Radar - SAR)
+geralmente são estão acoplado a uma plataforma que transmite
+micro-ondas ao longo de sua rota planejada em direção a um cenário geográfico;
+
+* Pulsos são emitidos em direção ao cenário e o radar recebe os sinais de retorno
+que são processados para formar uma imagem, estes podem ser na polarização circular ou linear.
+
+
+![](images/pulsosHHHV.jpg){fig-align="center" width="50%"}
+
+
+* Quando apenas um par de direções é usado, as imagens geradas são
+chamadas de *SAR* monopolarizadas e, quando várias direções são usadas,
+o processo é chamado de *PolSAR (SAR Polarimétrico)*;
+
+---
+
+
+## Introdução
+
+<hr>
+
+<br/>
+
+<h4>Vantagens</h4>
+
+* Images *SAR* podem ser obtidas de qualquer lugar (terra, mar, ar);
+* a qualquer momento (dia ou noite);
+* em quase todas as condições climáticas (nuvens, chuva);
+* produzem imagens de alta resolução (alta largura de banda) das superfícies estudadas;
+
+
+
+
+<br/>
+<br/>
+
+
+<h4>Desvantagens</h4>
+
+* custo elevado para aquisição e manutenção dos satélites e radares;
+* as imagens são afetadas por um ruído chamado *speckle*, que cria uma aparência granulada nas imagens, dificultando a interpretação e análise;
+
+
+<div class="imgspeckle" style="margin-top:-30px; text-align: center;">
+<img src="images/speckle.png">
+</div>
+
+
+
+---
+
+
+
+## Introdução
+
+<hr>
+<br/>
+
+![*Speckle* em imagem SAR.](images/speckle.png){fig-align="center"}
+
+
+
+---
+
+
+
+## Dados Polarimétricos *multi-look*
+
+<hr>
+
+<br>
+
+- Cada entrada de uma image PolSAR é associada com os elementos da seguinte matriz:
+	
+$$
+\mathbf{S}=\left( \begin{array}{cc}
+S_{hh} & S_{hv} \\
+S_{vh} & S_{vv} \end{array} \right)
+\label{matrizpolar}
+$$
+
+em que $S_{hh}$, $S_{hv}$, $S_{vh}$ e $S_{vv}$
+são os coeficientes de espalhamento complexos do alvo para os respectivos canais de polarização, e os subscritos $h$ e $v$ representam a polarização horizontal e vertical, respectivamente, e,
+
+$$
+S_{rs} = A_{rs} e^{i \phi_{rs}} = \mathrm{Re}(S_{rs}) + i \mathrm{Im}(S_{rs})
+$$
+
+em que $\mathrm{Re}(S_{rs})$ e $\mathrm{Im}(S_{rs})$ são as partes real e imaginária do coeficiente de espalhamento, respectivamente, e $i$ é a unidade imaginária, $A_{rs}$ é a amplitude do coeficiente de espalhamento e $\phi_{rs}$ é a fase do coeficiente de espalhamento, para $r,s \in \{h,v\}$.
+
+
+---
+
+## Dados Polarimétricos *multi-look*
+
+<hr>
+
+<br>
+
+![](images/fig3-1.png){fig-align="center" width="40%"}
+
+- Na prática, as polarizações cruzadas são muito semelhantes; ou seja, $S_{hv} \approx S_{vh}$.
+
+
+----
+
+
+## Dados Polarimétricos *multi-look*
+
+
+<hr>
+
+<br>
+
+
+- Dados PolSAR *single-look* não levam em conta o controle do efeito *speckle* sobre as imagens
+
+. . .
+
+- Um processo para contornar isso é chamado de processamento *multi-look*
+	
+![](images/pixels_PolSAR4.png){fig-align="center" width="40%"}
+
+
+---
+
+## Dados Polarimétricos *multi-look*
+
+
+<hr>
+
+<br>
+
+$\mathbf{z}_i = (S_1^{(i)}\,S_2^{(i)}\,\cdots\,S_p^{(i)})^{\top} \, \in \mathbb{C}^{p}$
+é o $i$-ésimo vetor associado a $p$ canais de polarização em uma amostra de
+$L$ informações extraídas da mesma cena, para $i=1,\ldots,L$.
+
+<p>
+
+![](images/pixels_PolSAR4.png){fig-align="center" width="40%"}
+
+---
+
+## Dados Polarimétricos *multi-look*
+<hr>
+<br>
+
+- Uma imagem *PolSAR* pode ser entendida como uma cena, na qual cada entrada está associada a uma matriz hermitiana definida positiva, o que requer o uso de métodos de processamento multivariado
+
+![](images/imagem_para_matriz3.png){fig-align="center" width="40%"}
+
+---
+
+## Modelagem Estatística
+<h4> Retroespalhadores</h4>
+
+<hr/>
+<br/>
+
+- Tomando apenas um canal de polarização,
+sabe-se que se o número de espalhadores,
+diga-se $n$, em uma célula de resolução
+for grande o suficiente e aproximadamente constante entre diversos *pixels*,
+então o sinal eletromagnético retornado
+
+$$
+S_{rs} = \sum_{k=1}^N S^{(k)}_{rs} = \sum_{k=1}^N  A_{rs}^{(k)} e^{i \phi_{rs}(k)},
+$$
+
+segue a lei Gaussiana complexa,
+em que $S^{(k)}_{rs}$
+é a quantidade de valor complexo que representa o espalhador individual.
+
+
+---
+
+## Modelagem Estatística
+<h4> Retroespalhadores</h4>
+
+<hr>
+
+
+![](images/retroespalhadores.png){fig-align="center" width="40%"}
+
+<br>
+
+. . .
+
+> <span style="color: red; text-size:20pt;">Como o número de retroespalhadores mudam entre as células de resolução, é interessante que ele seja descrito como uma **variável aleatória**, diga-se $N$.</span>
+
+
+
+---
+
+
+## Modelagem Estatística
+<h4> Modelos da literatura e formulação física das novas propostas</h4>
+<hr/>
+<br/>
+
+- Há evidências de que a distribuição Wishart complexa pode representar o retorno *PolSAR* de cenários homogêneos.
+
+<br/>
+
+- As distribuições Poisson truncada e geométrica podem ser usadas para modelar a quantidade de sinais retornados em uma célula de resolução.
+
+<br/>
+
+
+- Combinando essas duas evidências, propomos a soma aleatória da distribuição Wishart complexa com o número de termos seguindo as leis Poisson truncada e geométrica como dois descritores para o retorno de dados *PolSAR*.
+
+
+----
+
+
+
+## Modelagem Estatística
+<h4> Novos modelos</h4>
+<hr/>
+<br/>
+
+Primeiramente, 
+seja
+$\mathbf{Z}_i\sim \mathcal{W}_{m}^{\mathbb{C}}(\mathbf{\Sigma},L)$ para $i=1,\ldots,N$
+com função densidade de probabilidade
+
+\begin{align}
+  \begin{array}{lr}
+f({\dot{\mathbf{Z}}_i}) =
+  \frac{|{\dot{\mathbf{Z}}_i}|^{L-m}}{|\mathbf{\Sigma}|^L\Gamma_m(L)}
+\exp \left\{ - \operatorname{tr} \left(\mathbf{\Sigma}^{-1}{\dot{\mathbf{Z}}_i} \right)  \right\}
+ \, \mathbb{I}_{ \mathbf{ \Omega }_+ } ( \dot{ \mathbf{S} } )
+  \end{array}
+\end{align}
+
+
+em que $\Gamma_m(L)$
+é a função gama multivariada.
+Então, seja
+$\mathbf{S}_k=\sum_{i=1}^k\mathbf{Z}_i\sim \mathcal{W}_{m}^{\mathbb{C}}(\mathbf{\Sigma},kL)$
+e
+a matriz de coerência por célula
+segue a soma composta
+$$\mathbf{S}=\sum_{i=1}^N\mathbf{Z}_i$$ com
+$N\sim \text{TPo}(\lambda)$,
+logo a densidade é dada por
+
+
+----
+
+## Modelagem Estatística
+<h4> Novos modelos</h4>
+<hr/>
+<br/>
+
+\begin{align*}
+  \begin{array}{lr}
+  \begin{array}{rl}
+f({\dot{\mathbf{S}}})
+&=\sum_{k=1}^\infty P(N=k)f_{\mathbf{S}_k}({\dot{\mathbf{S}}})\,\mathbb{I}_{\mathbf{\Omega}_+}(\dot{\mathbf{S}})
+\\
+&=
+\left(\frac{1}{\mathrm{e}^\lambda-1}\right)
+\sum_{i=1}^\infty\frac{\lambda^k}{k!}f_{\mathcal{W}_{m}^{\mathbb{C}}(\mathbf{\Sigma},kL)}({\dot{\mathbf{S}}})
+\\
+&=\left(\frac{\mathrm{e}^{-\operatorname{tr}\left(\mathbf{\Sigma}^{-1}{\dot{\mathbf{S}}}\right)}}{|{\dot{\mathbf{S}}}|^m\left(\mathrm{e}^\lambda-1\right)}\right)\sum_{i=1}^\infty\frac{\left(\lambda|\mathbf{\Sigma}^{-1}{\dot{\mathbf{S}}}|^L\right)^k}{k!\Gamma_m(kL)},
+  \end{array}
+  \end{array}
+\end{align*}
+
+<br/>
+
+em que ${\dot{\mathbf{S}}}=\{s_{i,j}\}$ é uma possível realização de ${\mathbf{S}}=\{S_{i,j}\}$.
+
+<br/>
+
+Esta situação é denotada por
+$\mathbf{S}\sim \text{CPT}\mathcal{W}_{m}^{\mathbb{C}}(\lambda,\mathbf{\Sigma},L)$.
+
+
+
+----
+
+## Modelagem Estatística
+<h4> Novos modelos</h4>
+<hr/>
+<br/>
+
+Agora assuma que $N\sim \text{Geo}(p)$ e $\mathbf{Z}_i\sim \mathcal{W}_{m}^{\mathbb{C}}(\mathbf{\Sigma},L)$ para $i=1,\ldots,N$,
+a matriz de coerência por célula segue a soma composta
+ $\mathbf{S}=\sum_{i=1}^N\mathbf{Z}_i$ com densidade
+ 
+\begin{align*}
+  \begin{array}{lr}
+  \begin{array}{rl}
+f({\dot{\mathbf{S}}})
+&=\sum_{k=1}^\infty P(N=k)f_{\mathbf{S}_k}(\dot{\mathbf{S}}) \mathbb{I}_{\mathbf{\Omega}_+}(\dot{\mathbf{S}})
+\\
+&=
+\left(
+\frac{
+	p\mathrm{e}^{-\operatorname{tr}\left(\mathbf{\Sigma}^{-1}{\dot{\mathbf{S}}}\right)}
+}{
+	(1-p)|{\dot{\mathbf{S}}}|^m
+}
+\right)
+\sum_{k=1}^\infty
+\frac{
+	\left((1-p)|\mathbf{\Sigma}^{-1}{\dot{\mathbf{S}}}|^L\right)^k
+}{
+	\Gamma_m(kL)
+}\,\mathbb{I}_{\mathbf{\Omega}_+}(\dot{\mathbf{S}}).
+  \end{array}
+  \end{array}
+\end{align*}
+
+<br/>
+
+Essa situação é denotada como $\mathbf{S}\sim \text{CG}\mathcal{W}_{m}^{\mathbb{C}}(p,\mathbf{\Sigma},L)$.
+
+
+
+----
+
+## Modelagem Estatística
+<h4> Novos modelos</h4>
+<hr/>
+<br/>
+
+![Densidades marginais das distribuições  $\text{CPT}\mathcal{W}_{m}^{\mathbb{C}}$ e  $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$.](images/densidades-marginais.png){fig-align="center" width="60%"}
+
+<br/>
+
+* Os EMVs para os parâmetros para as ditribuições
+$\text{CPT}\mathcal{W}_{m}^{\mathbb{C}}$ e  $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ foram obtidos
+por meio do algoritmo EM.
+
+
+
+----
+
+## Modelagem Estatística
+<h4> Novos modelos</h4>
+<hr/>
+<br/>
+
+![Diagrama das relações entre distribuições *PolSAR*. Aqui, o vetor de parâmetros ( $\alpha , \beta , \lambda , p$ ) representa a forma, $\mathbf{\Sigma}$ denota um tipo de locação ou uma matriz de dispersão e $L$ é o Número Estimado de *Looks*.](images/diagrama-distribuicoes.png){fig-align="center" width="60%"}
+
+
+
+----
+
+## Resultados
+<h4>Análise de dados reais</h4>
+<hr/>
+<br/>
+
+
+![Mapas dos parâmetros estimados das distribuições $\text{CPT}\mathcal{W}_{m}^{\mathbb{C}}$ (acima) e
+$\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ (em baixo) para a imagem
+ São Francisco.](images/emv-sf.png){fig-align="center" width="60%"}
+
+
+
+----
+
+## Resultados
+<h4>Análise de dados reais</h4>
+<hr/>
+<br/>
+
+
+![Mapas dos parâmetros estimados das distribuições $\text{CPT}\mathcal{W}_{m}^{\mathbb{C}}$ (acima) e
+$\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ (em baixo) para a imagem
+ Foulum.](images/emv-foulum.png){fig-align="center" width="60%"}
+
+
+---
+
+## Resultados
+<h4>Análise de dados reais</h4>
+<hr/>
+<br/>
+
+
+![Mapas dos parâmetros estimados das distribuições $\text{CPT}\mathcal{W}_{m}^{\mathbb{C}}$ (acima) e
+$\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ (em baixo) para a imagem
+ DEMMIN-Görmin.](images/emv-demmin.png){fig-align="center" width="60%"}
+
+
+
+---
+
+## Resultados
+<h4>Análise de dados reais</h4>
+<hr/>
+<br/>
+
+![Diagrama de Mellin com amostra de MLCs calculados a partir das amostras de São Francisco.
+](images/mellin-sf.png){fig-align="center" width="60%"}
+
+
+---
+
+
+## Resultados
+<h4>Análise de dados reais</h4>
+<hr/>
+<br/>
+
+![Diagrama de Mellin com amostra de MLCs calculados a partir das amostras de Foulum.
+](images/mellin-foulum.png){fig-align="center" width="60%"}
+
+
+---
+
+## Resultados
+<h4>Análise de dados reais</h4>
+<hr/>
+<br/>
+
+![Diagrama de Mellin com amostra de MLCs calculados a partir das amostras de DEMMIN-Görmin.](images/mellin-demmin.png){fig-align="center" width="60%"}
+
+
+---
+
+## Conclusões
+<hr/>
+<br/>
+
+- Foram propostas novas distribuições para dados *PolSAR multilook* usando a abordagem de soma estocástica para descrever dados multimodais.
+
+<p>
+
+- Elas foram denominadas como composta Poisson truncada Wishart complexa ($\text{CPT}\mathcal{W}^\mathbb{C}_m$) e composta geométrica Wishart complexa ($\text{CG}\mathcal{W}^\mathbb{C}_m$).
+
+<p>
+
+- Algumas propriedades matemáticas das distribuições são derivadas, tais como as funções características (fc) e cumulantes de Mellin.
+
+<p>
+
+- Novos mecanismos de estimação por máxima verossimilhança via algoritmo *EM (Expectation-Maximization)* são derivados e avaliados por experimentos Monte Carlo.
+
+---
+
+## Conclusões
+<hr/>
+<br/>
+
+Esses resultados podem ser encontrados no artigo publicado na
+ **Remote Sensing**:
+
+![](images/paper.png){fig-align="center" width="550"}
+
+
+<div class="contrib">
+
+<!-- <br/> -->
+<b>Autores:</b> Ferreira, J.A., Nascimento, A.D.C. \&  Frery, A.
+<br/>
+<b>Ano:</b> 2022 - <b>DOI (link):</b> <a href="https://doi.org/10.3390/rs14205083" target="_blank">10.3390/rs14205083</a>
+</div>
+
+
+
+
+----
+
+## Referências
+
+<hr/>
+<br/>
+
+
+- Ferreira, J.A.; Nascimento, A.D.C.; Frery, A.C. PolSAR Models with Multimodal Intensities. Remote Sens. 2022, 14, 5083.
+
+
+- Anfinsen, S.N.; Doulgeris, A.P.; Eltoft, T. Goodness-of-Fit Tests for Multilook Polarimetric Radar Data Based on the Mellin
+Transform. IEEE Trans. Geosci. Remote Sens. 2011, 49, 2764 –2781.
+
+- Nascimento, A.D.; Rêgo, L.C.; Nascimento, R.L. Compound truncated Poisson normal distribution: Mathematical properties and
+Moment estimation. Inverse Probl. Imaging 2019, 13, 787–803.
+
+- Freitas, C.C.; Frery, A.C.; Correia, A.H. The Polarimetric G Distribution for SAR Data Analysis. Environmetrics 2005, 16, 13–31.
+
+- Lee, J.S.; Schuler, D.L.; Lang, R.H.; Ranson, K.J. K-distribution for multi-look processed polarimetric SAR imagery. In Proceedings
+of the International Geoscience and Remote Sensing Symposium (IGARSS’1994), Pasadena, CA, USA, 8–12 August 1994; Volume 4,
+pp. 2179–2
+
+
+
+
+-------
+
+<br/>
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+<h3 style="font-size:30pt">Contato:</h3>
+<p/>
+
+
+**e-mail**: <jodavid.ferreira@ufpe.br>
+
+**Site Pessoal**: <https://jodavid.github.io/>
+
+**Lattes**: [http://lattes.cnpq.br/4617170601890026](http://lattes.cnpq.br/4617170601890026)
+
+**LinkedIn**: [jodavidferreira](https://www.linkedin.com/in/jodavidferreira/)
+
+:::
+
+::: {.column width="40%"}
+
+<!-- ![](images/obrigado.png){.relative fig-align="center" width="800"}
+
+<div style="text-align:center; margin-top:-30px">
+Computational Agriculture Statistics Laboratory - UFPE
+</div> -->
+
+:::
+::::
+
+<div style="text-align:center; margin-top:-300px;margin-right:-300px;">
+![](images/obrigado.png){.relative fig-align="center" width="700"}
+</div>
+
+<!--<hr/>
+
+ <h1 style="text-align: center;">
+
+OBRIGADO!
+
+</h1> -->
+
+::: {style="text-align: center; margin-top: -50px;"}
+
+<hr/>
+
+Slide produzido com [[quarto]](https://quarto.org/) + [[R]](https://www.r-project.org/)
+:::
