@@ -247,11 +247,119 @@ $L$ informações extraídas da mesma cena, para $i=1,\ldots,L$.
 
 ---
 
+## Modelos da literatura
+<h4>para retornos PolSAR por MM</h4>
+<hr/>
+
+Como o ruído *speckle* é multiplicativo, o modelo multiplicativo (MM) é um mecanismo gerador de distribuições *PolSAR* que tem sido amplamente utilizado para modelar os dados *multi-look*.
+
+<br/>
+
+Sejam $X$ e $\boldsymbol{Y}$ duas variáveis aleatórias positivas e independentes
+tal que,
+$X$ está associado ao *retroespalhamento*, 
+enquanto
+$\boldsymbol{Y}$ descreve o *speckle*.
+
+<br/>
+
+
+O MM para imagens *PolSAR* *multilook*
+assume  que cada *pixel* segue a identidade $\boldsymbol{Z}=\boldsymbol{Y}\times X$.
+
+> Nesse caso, enquanto a variável aleatória $X$ modela o retroespalhamento do terreno,
+$\boldsymbol{Y}$ descreve o ruído *speckle* multidimensional *multi-look*.
+
+---
+
+## Modelos da literatura
+<h4>para retornos PolSAR por MM</h4>
+<hr/>
+<br/>
+
+Tomando o MM como mecanismo gerador de distribuições *PolSAR*, cada retorno associado a uma entrada da imagem é o produto de duas variáveis aleatórias independentes, que descrevem a configuração do terreno e o efeito do speckle.
+
+<br/>
+
+O retorno $\mathbf{Z} = \mathbf{Y} X$ tem densidade dada por (ANFINSEN; ELTOFT , 2011)
+
+\begin{align*}
+  \begin{array}{lr}
+f_{\mathbf{Z}}(\dot{\mathbf{Z}})
+=
+\int_0^{\infty}	
+x^{-m^2}\underbrace{f_{\mathbf{Y}}(\dot{\mathbf{Z}}/x)}_{\text{Speckle}}\underbrace{f_X(x)}_{\text{Backscatter}}
+\mathrm{d}x,	& (25)
+  \end{array}
+\end{align*}
+
+em que ${\dot{\mathbf{Z}}}\in\mathbf{\Omega}_+:=\{\mathbf{Z}\in \mathbb{C}^m\times \mathbb{C}^m:\mathbf{Z}=\mathbf{Z}^*\}$
+é uma possível realização de $\mathbf{Z}$
+e
+$(\cdot)^*$ é o operador transposto conjugado.
+
+
+---
+
+## Modelos da literatura
+<h4>para retornos PolSAR por MM</h4>
+<hr/>
+ 
+
+![](images/resumo-mca.png){fig-align="center" width="70%"}
+
+<div style="text-align: center; margin-top:-30px;">
+Resumo das distribuições matriciais^[MCA - Matrizes de covariâncias amostrais ].
+</div>
+ 
+
+---
+
+## Modelos da literatura
+<h4>para retornos PolSAR por MM</h4>
+<hr/>
+ 
+<h4>Limitações desses modelos:</h4>
+
+. . .
+
+> 1 - Eles não conseguem modelar adequadamente os dados *PolSAR* que apresentam intensidades multimodais, ou seja, aquelas que possuem mais de um pico em suas distribuições de intensidade.
+
+. . .
+
+<div style="text-align: center; margin-top:-50px;">
+</div>
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](images/graphic__parametric_wishart.png){fig-align="center" width="100%"}
+Distribuição Wishart
+:::
+::: {.column width="50%"}
+![](images/graphic__parametric_g0i.png){fig-align="center" width="100%"}
+Distribuição $\mathcal{G}^0_m$
+:::
+::::
+
+---
+
+## Modelos da literatura
+<h4>para retornos PolSAR por MM</h4>
+<hr/>
+ 
+> 2 - Esses modelos não levam em consideração a variação do número de retroespalhadores entre as células de resolução, o que pode resultar em uma representação inadequada dos dados *PolSAR*.
+
+. . .
+
+
+<!-- ---
+
 ## Modelagem Estatística
 <h4> Retroespalhadores</h4>
 
 <hr/>
-<br/>
+<br/> -->
 
 - Tomando apenas um canal de polarização,
 sabe-se que se o número de espalhadores,
@@ -357,9 +465,9 @@ f({\dot{\mathbf{S}}})
 \\
 &=
 \left(\frac{1}{\mathrm{e}^\lambda-1}\right)
-\sum_{i=1}^\infty\frac{\lambda^k}{k!}f_{\mathcal{W}_{m}^{\mathbb{C}}(\mathbf{\Sigma},kL)}({\dot{\mathbf{S}}})
+\sum_{k=1}^\infty\frac{\lambda^k}{k!}f_{\mathcal{W}_{m}^{\mathbb{C}}(\mathbf{\Sigma},kL)}({\dot{\mathbf{S}}})
 \\
-&=\left(\frac{\mathrm{e}^{-\operatorname{tr}\left(\mathbf{\Sigma}^{-1}{\dot{\mathbf{S}}}\right)}}{|{\dot{\mathbf{S}}}|^m\left(\mathrm{e}^\lambda-1\right)}\right)\sum_{i=1}^\infty\frac{\left(\lambda|\mathbf{\Sigma}^{-1}{\dot{\mathbf{S}}}|^L\right)^k}{k!\Gamma_m(kL)},
+&=\left(\frac{\mathrm{e}^{-\operatorname{tr}\left(\mathbf{\Sigma}^{-1}{\dot{\mathbf{S}}}\right)}}{|{\dot{\mathbf{S}}}|^m\left(\mathrm{e}^\lambda-1\right)}\right)\sum_{k=1}^\infty\frac{\left(\lambda|\mathbf{\Sigma}^{-1}{\dot{\mathbf{S}}}|^L\right)^k}{k!\Gamma_m(kL)},
   \end{array}
   \end{array}
 \end{align*}
@@ -446,6 +554,75 @@ por meio do algoritmo EM.
 
 ----
 
+
+## Experimentos Numéricos
+<h4>Análise com dados artificiais</h4>
+<hr/>
+
+Um experimento de Monte Carlo é realizado  para quantificar
+o comportamento assintótico dos EMVs para os parâmetros $[\lambda,\mathbf{\Sigma}]$ e $[p,\mathbf{\Sigma}]$.
+
+1. Amostras das distribuições
+	$\text{CPT}\mathcal{W}_{m}^{\mathbb{C}}$
+	e
+	$\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$
+	são geradas.
+2. Tamanhos
+	$T=10, 30, 100$ e $1000$
+	e mil replicas Monte Carlo são utilizadas.
+3. Adotamos NEL igual a quatro (L = 4).
+4. E uma matriz comum
+
+\begin{align}
+	\mathbf{\Sigma}
+	=
+	\left[\!\!
+	\begin{array}{ccc}
+	0.07582+0i & 0.00364+0.00388i & 0.01604+0.01125i\\
+	& 0.03737+0i & 0.00151+0.00202i \\
+	& & 0.06308+0i
+	\end{array} 
+	\!\! \right]\!\!,
+\end{align}
+
+com
+$\text{tr}(\mathbf{\Sigma})= 0.17626 \text{ e } |\mathbf{\Sigma}| =  0.00016$ .
+
+---
+
+## Experimentos Numéricos
+<h4>Análise com dados artificiais</h4>
+<hr/>
+
+
+![](images/emv-cptw.png){fig-align="center" width="70%"}
+
+<div style="text-align: center;">
+Performance dos EMVs para dados $\text{CPT}\mathcal{W}_{m}^{\mathbb{C}}$
+</div>
+
+*Parâmetros Verdadeiros:* 
+$\text{tr}(\mathbf{\Sigma})= 0.17626 \text{ e } |\mathbf{\Sigma}| =  0.00016$
+
+---
+
+
+## Experimentos Numéricos
+<h4>Análise com dados artificiais</h4>
+<hr/>
+
+![](images/emv-cgw.png){fig-align="center" width="70%"}
+
+<div style="text-align: center;">
+Performance dos EMVs para dados $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$
+</div>
+
+
+*Parâmetros Verdadeiros:* 
+$\text{tr}(\mathbf{\Sigma})= 0.17626 \text{ e } |\mathbf{\Sigma}| =  0.00016$
+
+----
+
 ## Resultados
 <h4>Análise de dados reais</h4>
 <hr/>
@@ -454,7 +631,7 @@ por meio do algoritmo EM.
 
 ![Mapas dos parâmetros estimados das distribuições $\text{CPT}\mathcal{W}_{m}^{\mathbb{C}}$ (acima) e
 $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ (em baixo) para a imagem
- São Francisco.](images/emv-sf.png){fig-align="center" width="60%"}
+ São Francisco (EUA).](images/emv-sf.png){fig-align="center" width="60%"}
 
 
 
@@ -468,7 +645,7 @@ $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ (em baixo) para a imagem
 
 ![Mapas dos parâmetros estimados das distribuições $\text{CPT}\mathcal{W}_{m}^{\mathbb{C}}$ (acima) e
 $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ (em baixo) para a imagem
- Foulum.](images/emv-foulum.png){fig-align="center" width="60%"}
+ Foulum (Dinamarca).](images/emv-foulum.png){fig-align="center" width="60%"}
 
 
 ---
@@ -481,9 +658,73 @@ $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ (em baixo) para a imagem
 
 ![Mapas dos parâmetros estimados das distribuições $\text{CPT}\mathcal{W}_{m}^{\mathbb{C}}$ (acima) e
 $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ (em baixo) para a imagem
- DEMMIN-Görmin.](images/emv-demmin.png){fig-align="center" width="60%"}
+ DEMMIN-Görmin (Alemanha).](images/emv-demmin.png){fig-align="center" width="60%"}
 
 
+
+---
+
+## Diagrama de Mellin
+<hr/>
+<br/>
+
+Avaliar modelagem com distribuições *PolSAR* é um desafio, pois as técnicas tradicionais de avaliação de ajuste não são adequadas para dados matriciais.
+
+
+<br/>
+
+Sendo assim, o diagrama de Mellin é uma ferramenta útil para avaliar a qualidade do ajuste de modelos *PolSAR*.
+
+<br/>
+
+
+O diagrama de Mellin é uma representação gráfica:
+
+  -  do segundo ($\kappa_2$) e terceiro ($\kappa_3$) 
+log-cumulantes de Mellin
+  - que são derivados da função geradora de cumulantes do tipo Mellin (MCGF) 
+  - da matriz de log-cumulante (MLC)
+  - obtidas a partir da transformada de Mellin aplicada a matrizes aleatórias hermitianas, como as que descrevem os dados *PolSAR*.
+
+---
+
+## Diagrama de Mellin
+<hr/>
+<br/>
+
+<!-- A transformada de Mellin aplicada a matrizes aleatórias hermitianas é definida em $\mathbf{\Omega}_+$ e, portanto, pode ser aplicada aos modelos $\text{CPT}\mathcal{W}_{m}^{\mathbb{C}}$ e  $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$. -->
+
+Seja $\mathbf{C} \in  \mathbf{\Omega}_+$, 
+a transformada de Mellin para o mapeamento
+$g(\mathbf{C}): \mathbf{\Omega}_+ \rightarrow \mathbb{R}$
+é definida como:
+
+\begin{align*}
+  \begin{array}{lr}
+\phi_{\mathbf{C}}(s) & = \mathcal{M}\{g(\mathbf{C})\}(s)
+= \int\limits_{\mathbf{\Omega}_+}^{}|\mathbf{C}|^{s-m}g(\mathbf{C})\mathrm{d}\mathbf{C}
+  \end{array}
+\end{align*}
+
+com $s \in \mathbb{C}$, sempre que a integral existe. A função geradora de cumulantes do tipo Mellin (*Mellin-kind cumulant-generating function* - MCGF)
+é definida como
+
+\begin{align}
+  \begin{array}{lr}
+\varphi_{\mathbf{C}}(s) = \log \phi_{\mathbf{C}}(s)
+  \end{array}
+\end{align}
+
+e
+a matriz de log-cumulante (MLC)
+de $\nu$ -ésima ordem
+é definida como
+
+\begin{align}
+  \begin{array}{lr}
+\left. \kappa_\nu{\mathbf{C}} = \dfrac{d^\nu}{ds^\nu}\varphi_{\mathbf{C}}(s) \right|_{s=m}.
+  \end{array}
+\end{align}
 
 ---
 
@@ -492,7 +733,7 @@ $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ (em baixo) para a imagem
 <hr/>
 <br/>
 
-![Diagrama de Mellin com amostra de MLCs calculados a partir das amostras de São Francisco.
+![Diagrama de Mellin com amostra de MLCs calculados a partir das amostras de São Francisco (EUA).
 ](images/mellin-sf.png){fig-align="center" width="60%"}
 
 
@@ -504,7 +745,7 @@ $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ (em baixo) para a imagem
 <hr/>
 <br/>
 
-![Diagrama de Mellin com amostra de MLCs calculados a partir das amostras de Foulum.
+![Diagrama de Mellin com amostra de MLCs calculados a partir das amostras de Foulum (Dinamarca).
 ](images/mellin-foulum.png){fig-align="center" width="60%"}
 
 
@@ -515,28 +756,29 @@ $\text{CG}\mathcal{W}_{m}^{\mathbb{C}}$ (em baixo) para a imagem
 <hr/>
 <br/>
 
-![Diagrama de Mellin com amostra de MLCs calculados a partir das amostras de DEMMIN-Görmin.](images/mellin-demmin.png){fig-align="center" width="60%"}
+![Diagrama de Mellin com amostra de MLCs calculados a partir das amostras de DEMMIN-Görmin (Dinamarca).](images/mellin-demmin.png){fig-align="center" width="60%"}
 
 
 ---
 
 ## Conclusões
 <hr/>
-<br/>
 
-- Foram propostas novas distribuições para dados *PolSAR multilook* usando a abordagem de soma estocástica para descrever dados multimodais.
-
-<p>
-
-- Elas foram denominadas como composta Poisson truncada Wishart complexa ($\text{CPT}\mathcal{W}^\mathbb{C}_m$) e composta geométrica Wishart complexa ($\text{CG}\mathcal{W}^\mathbb{C}_m$).
+- Foram propostas <u>duas</u> novas distribuições para dados <u>*PolSAR multilook*</u> usando a abordagem de soma estocástica para descrever dados multimodais.
 
 <p>
 
-- Algumas propriedades matemáticas das distribuições são derivadas, tais como as funções características (fc) e cumulantes de Mellin.
+- Elas foram denominadas como <u>composta Poisson truncada Wishart complexa</u> $(\text{CPT}\mathcal{W}^\mathbb{C}_m)$ e <u>composta geométrica Wishart complexa</u> ($\text{CG}\mathcal{W}^\mathbb{C}_m$).
 
 <p>
 
-- Novos mecanismos de estimação por máxima verossimilhança via algoritmo *EM (Expectation-Maximization)* são derivados e avaliados por experimentos Monte Carlo.
+- Foram derivados estimadores de máxima verossimilhança (EMVs) para ajustar os modelos *PolSAR* através do Algoritmo *Expectation-Maximization* e os resultados numéricos indicaram que tais estimativas apresentaram valores <u>baixos de viés</u> e <u>erros quadráticos médios</u> para tamanhos de amostra que são realistas com a prática de processamento de dados *PolSAR*.
+
+
+<p>
+
+- Os <u>diagramas de MLCs</u> como critério de comparação apontaram que os modelos  $\text{CPT}\mathcal{W}_m^{\mathbb{C}}$ e $\text{CG}\mathcal{W}_m^{\mathbb{C}}$ podem fornecer melhores descrições de alguns <u>cenários *PolSAR*</u>.
+
 
 ---
 
@@ -638,3 +880,6 @@ OBRIGADO!
 
 Slide produzido com [[quarto]](https://quarto.org/) + [[R]](https://www.r-project.org/)
 :::
+
+<br/>
+Link: <http://jodavid.github.io/CBJME_PolSAR_Models/>
