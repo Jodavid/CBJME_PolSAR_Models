@@ -849,6 +849,36 @@ pp. 2179–2
 
 **LinkedIn**: [jodavidferreira](https://www.linkedin.com/in/jodavidferreira/)
 
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+![](images/castlab.png){.relative fig-align="center" width="135"}
+
+<div style="text-align:center; margin-top:-30px; font-size: 14pt;">
+Computational Agriculture Statistics Laboratory - UFPE
+</div>
+
+
+:::
+
+::: {.column width="45%"}
+  ![](images/LEME_logo_sem_texto.png){.relative fig-align="center" width="320"}
+
+  <div style="text-align:center; margin-top:-30px; font-size: 14pt;">
+Laboratório de Estatística Espacial e Modelagem Estatística - UFPE
+</div>
+
+
+:::
+
+:::: 
+
+
+
+
+
 :::
 
 ::: {.column width="40%"}
@@ -862,7 +892,7 @@ Computational Agriculture Statistics Laboratory - UFPE
 :::
 ::::
 
-<div style="text-align:center; margin-top:-300px;margin-right:-300px;">
+<div style="text-align:center; margin-top:-450px;margin-right:-600px;">
 ![](images/obrigado.png){.relative fig-align="center" width="700"}
 </div>
 
